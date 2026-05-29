@@ -1,0 +1,38 @@
+
+name: Auto Update README1
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # Every 5 minutes
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Generate README1
+        run: |
+          echo "# Autonomous SDLC Test" > README1.md
+          echo "" >> README1.md
+          echo "This file was updated automatically by GitHub Actions." >> README1.md
+          echo "" >> README1.md
+          echo "Last Run Time (UTC): $(date -u)" >> README1.md
+          echo "" >> README1.md
+          echo "Triggered By: GitHub Actions Cron Job" >> README1.md
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add README1.md
+
+          git diff --cached --quiet || git commit -m "Auto update README1"
